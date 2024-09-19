@@ -2,9 +2,11 @@ package com.course.springboot.config;
 
 import com.course.springboot.entities.Category;
 import com.course.springboot.entities.Order;
+import com.course.springboot.entities.Product;
 import com.course.springboot.entities.enums.OrderStatus;
 import com.course.springboot.repositories.CategoryRepository;
 import com.course.springboot.repositories.OrderRepository;
+import com.course.springboot.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +28,10 @@ public class TestConfig implements CommandLineRunner {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
     @Override
     public void run(String... args) throws Exception {
         Category cat1= new Category(null, "Electronics");
@@ -38,10 +44,16 @@ public class TestConfig implements CommandLineRunner {
         Order o1 = new Order(null, Instant.parse("2024-08-17T12:14:50Z"), OrderStatus.PAID,u1);
         Order o2 = new Order(null, Instant.parse("2024-09-11T14:44:23Z"),OrderStatus.WAITING_PAYMENT,u2);
         Order o3 = new Order(null, Instant.parse("2024-09-17T13:11:43Z"),OrderStatus.WAITING_PAYMENT,u1);
+        Product p1 = new Product(null, "The Lord of the Rings", "Lorem ipsum dolor sit amet, consectetur.", 90.5, "");
+        Product p2 = new Product(null, "Smart TV", "Nulla eu imperdiet purus. Maecenas ante.", 2190.0, "");
+        Product p3 = new Product(null, "Macbook Pro", "Nam eleifend maximus tortor, at mollis.", 1250.0, "");
+        Product p4 = new Product(null, "PC Gamer", "Donec aliquet odio ac rhoncus cursus.", 1200.0, "");
+        Product p5 = new Product(null, "Rails for Dummies", "Cras fringilla convallis sem vel faucibus.", 100.99, "");
 
         userRepository.saveAll(Arrays.asList(u1,u2));
         orderRepository.saveAll(Arrays.asList(o1,o2,o3));
         categoryRepository.saveAll(Arrays.asList(cat1,cat2,cat3));
+        productRepository.saveAll(Arrays.asList(p1,p2,p3,p4,p5));
     }
     
 
