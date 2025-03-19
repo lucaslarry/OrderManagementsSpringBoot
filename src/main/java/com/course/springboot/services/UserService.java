@@ -38,4 +38,9 @@ public class UserService {
         User user = objectMapper.convertValue(obj, User.class);
         return objectMapper.convertValue(userRepository.save(user), UserDTO.class);
     }
+
+    public void delete(Long id){
+        Optional<User> obj = repository.findById(id);
+
+    }
 }
