@@ -1,4 +1,4 @@
-package com.course.springboot.resources;
+package com.course.springboot.controller;
 
 import com.course.springboot.entities.Category;
 import com.course.springboot.services.CategoryService;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/categories")
-public class CategoryResource {
+public class CategoryController {
 
     @Autowired
     private CategoryService service;
