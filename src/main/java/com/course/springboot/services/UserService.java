@@ -41,6 +41,17 @@ public class UserService {
 
     public void delete(Long id){
         Optional<User> obj = repository.findById(id);
+    }
 
+    public UserDTO update(Long id, UserDTO obj){
+        User user = repository.getReferenceById(id);
+        updateData(obj, user);
+        return objectMapper.convertValue(userRepository.save(user), UserDTO.class);
+    }
+
+    private void updateData(UserDTO obj, User user){
+        user.setName(obj.getName());
+        user.setPhone(obj.getPhone());
+        user.setEmail(obj.getEmail());
     }
 }
