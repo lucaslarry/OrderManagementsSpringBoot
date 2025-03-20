@@ -1,7 +1,7 @@
 package com.course.springboot.config;
 
 import com.course.springboot.entities.*;
-import com.course.springboot.entities.enums.OrderStatus;
+import com.course.springboot.enums.OrderStatus;
 import com.course.springboot.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
