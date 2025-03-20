@@ -2,7 +2,9 @@ package com.course.springboot.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -34,6 +36,14 @@ public class User implements Serializable{
     private List<Order> orders = new ArrayList<>();
 
 
+    @ManyToMany()
+    @JoinTable(
+            name = "role_x_user",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
+
     public User(Long id, String name, String email, String phone, String password) {
         this.id = id;
         this.name = name;
@@ -41,8 +51,6 @@ public class User implements Serializable{
         this.phone = phone;
         this.password = password;
     }
-
-
 
 
 }

@@ -1,9 +1,12 @@
 package com.course.springboot.dto.user;
 
+import com.course.springboot.entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +18,7 @@ public class UserDTO {
     private String name;
     private String email;
     private String phone;
+    private Set<Role> roles;
 
 
 }
