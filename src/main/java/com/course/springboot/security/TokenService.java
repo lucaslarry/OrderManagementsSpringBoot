@@ -38,7 +38,7 @@ public class TokenService {
 
         return TOKEN_PREFIX + " " +
                 Jwts.builder()
-                        .setIssuer("vemser-api")
+                        .setIssuer("SpringApi")
                         .claim(Claims.ID, usuario.getId().toString())
                         .claim(CARGOS_CLAIM, cargos)
                         .setIssuedAt(now)
