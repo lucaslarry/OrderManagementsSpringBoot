@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -23,7 +24,8 @@ public class SecurityConfigurations {
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .authorizeHttpRequests(authorize -> authorize
                             .antMatchers("/auth", "/").permitAll()
-                            .anyRequest().authenticated()
+                            .antMatchers(HttpMethod.POST, "/users/register").permitAll()
+                            .anyRequest().permitAll()
                     )
 
                     .build();
@@ -36,9 +38,9 @@ public class SecurityConfigurations {
             return authenticationConfiguration.getAuthenticationManager();
         }
 
-        @Bean
-        public PasswordEncoder passwordEncoder() {
-            return new BCryptPasswordEncoder();
-        }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new Pbkdf2PasswordEncoder();
+    }
 
 }

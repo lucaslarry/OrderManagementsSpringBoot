@@ -13,6 +13,6 @@ public class UserCreateDTO {
     private String email;
     private String phone;
     private String password;
-    private Set<Role> roles;
+    private Set<Long> roleIds;
 
 }
