@@ -1,5 +1,6 @@
 package com.course.springboot.controllers;
 
+import com.course.springboot.dto.user.UserCreateDTO;
 import com.course.springboot.dto.user.UserDTO;
 import com.course.springboot.exceptions.BancoDeDadosException;
 import com.course.springboot.exceptions.RegraDeNegocioException;
@@ -32,10 +33,10 @@ public class UserController {
         return new ResponseEntity<>(obj, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<UserDTO> insert(@RequestBody UserDTO obj) throws BancoDeDadosException {
-        obj = service.insert(obj);
-        return new ResponseEntity<>(obj, HttpStatus.CREATED);
+    @PostMapping("/register")
+    public ResponseEntity<UserDTO> insert(@RequestBody UserCreateDTO obj) throws Exception {
+        UserDTO entity = service.insert(obj);
+        return new ResponseEntity<>(entity, HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}")
