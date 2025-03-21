@@ -6,6 +6,7 @@ import com.course.springboot.dto.user.UserCreateDTO;
 import com.course.springboot.dto.user.UserDTO;
 import com.course.springboot.entities.User;
 import com.course.springboot.exceptions.RegraDeNegocioException;
+import com.course.springboot.security.TokenService;
 import com.course.springboot.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,8 @@ public class AuthController {
 
     public final UserService userService;
 
+    public final TokenService tokenService;
+
     @PostMapping
     public ResponseEntity login(@RequestBody @Valid LoginDTO loginDTO) throws RegraDeNegocioException {
         try {
@@ -41,7 +44,12 @@ public class AuthController {
 
             Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
-            return ResponseEntity.ok().build();
+            User usuarioValidado = (User) authentication.getPrincipal();
+
+            TokenDTO tokenDTO = new TokenDTO();
+            tokenDTO.setToken(tokenService.generateToken(usuarioValidado));
+
+            return new ResponseEntity<>(tokenDTO, HttpStatus.OK);
 
         } catch (BadCredentialsException e) {
             throw new RegraDeNegocioException("E-mail ou senha inválidos. Tente novamente.", HttpStatus.NOT_FOUND);
