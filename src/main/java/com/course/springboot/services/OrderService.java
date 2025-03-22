@@ -2,6 +2,7 @@ package com.course.springboot.services;
 
 import com.course.springboot.dto.order.OrderCreateDTO;
 import com.course.springboot.dto.order.OrderDTO;
+import com.course.springboot.dto.order.OrderStatusUpdateDTO;
 import com.course.springboot.dto.order.OrderUpdateDTO;
 import com.course.springboot.dto.user.UserDTO;
 import com.course.springboot.entities.*;
@@ -65,22 +66,7 @@ public class OrderService {
 
             orderRepository.save(order);
 
-            Set<OrderItem> orderItems = new HashSet<>();
-
-            for (Long productId : orderCreateDTO.getProductIds()) {
-                Product product = productService.findById(productId);
-
-                OrderItem existingOrderItem = orderItems.stream()
-                        .filter(item -> item.getProduct().equals(product))
-                        .findFirst()
-                        .orElse(null);
-
-                if (existingOrderItem != null) {
-                    existingOrderItem.setQuantity(existingOrderItem.getQuantity() + 1);
-                } else {
-                    orderItems.add(new OrderItem(order, product, 1, product.getPrice()));
-                }
-            }
+            Set<OrderItem> orderItems = createOrderItems(order, orderCreateDTO);
 
             orderItemRepository.saveAll(orderItems);
             order.setItems(orderItems);
@@ -94,7 +80,44 @@ public class OrderService {
         }
     }
 
+    private Set<OrderItem> createOrderItems(Order order, OrderCreateDTO orderCreateDTO) throws RegraDeNegocioException {
+        Set<OrderItem> orderItems = new HashSet<>();
 
+        for (Long productId : orderCreateDTO.getProductIds()) {
+            Product product = productService.findById(productId);
+
+            OrderItem existingOrderItem = orderItems.stream()
+                    .filter(item -> item.getProduct().equals(product))
+                    .findFirst()
+                    .orElse(null);
+
+            if (existingOrderItem != null) {
+                existingOrderItem.setQuantity(existingOrderItem.getQuantity() + 1);
+            } else {
+                orderItems.add(new OrderItem(order, product, 1, product.getPrice()));
+            }
+        }
+        return orderItems;
+    }
+
+    public OrderDTO updateStatus(Long id, OrderStatusUpdateDTO orderDTO) throws RegraDeNegocioException, BancoDeDadosException {
+        try {
+            Order entity = orderRepository.findById(id)
+                    .orElseThrow(() -> new RegraDeNegocioException("Pedido não encontrado", HttpStatus.NOT_FOUND));
+            updateStatusData(orderDTO, entity);
+            return objectMapper.convertValue(orderRepository.save(entity), OrderDTO.class);
+        } catch (RegraDeNegocioException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BancoDeDadosException("Erro ao atualizar pedido: " + e.getMessage());
+        }
+    }
+
+
+
+    private void updateStatusData(OrderStatusUpdateDTO orderDTO, Order entity) {
+        entity.setOrderStatus(orderDTO.getOrderStatus());
+    }
 
     public OrderDTO update(Long id, OrderUpdateDTO orderDTO) throws RegraDeNegocioException, BancoDeDadosException {
         try {
@@ -109,9 +132,18 @@ public class OrderService {
         }
     }
 
+    private void updateData(OrderUpdateDTO orderDTO, Order entity) throws RegraDeNegocioException {
+        Set<OrderItem> orderItems = entity.getItems();
+        orderItemRepository.deleteAll(orderItems);
+        OrderCreateDTO orderCreateDTO = objectMapper.convertValue(orderDTO, OrderCreateDTO.class);
+        orderItems = createOrderItems(entity, orderCreateDTO);
 
+        orderItemRepository.saveAll(orderItems);
+        entity.setItems(orderItems);
+    }
 
-    private void updateData(OrderUpdateDTO orderDTO, Order entity) {
-        entity.setOrderStatus(orderDTO.getOrderStatus());
+    public Order findEntityById(Long id) throws RegraDeNegocioException {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new RegraDeNegocioException("Pedido não encontrado", HttpStatus.NOT_FOUND));
     }
 }

@@ -1,6 +1,5 @@
 package com.course.springboot.dto.payment;
 
-import com.course.springboot.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -14,9 +13,12 @@ import java.time.Instant;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PaymentCreateDTO {
+public class PaymentDTO {
 
-    private Long orderId;
+    private Long id;
+
+    @Schema(description = "Order creation date", example = "2023-10-01T12:00:00")
+    private Instant moment;
 
 
 }

@@ -1,6 +1,8 @@
 package com.course.springboot.controllers;
 
 import com.course.springboot.dto.payment.PaymentCreateDTO;
+import com.course.springboot.dto.payment.PaymentDTO;
+
 import com.course.springboot.exceptions.BancoDeDadosException;
 import com.course.springboot.exceptions.RegraDeNegocioException;
 import com.course.springboot.services.PaymentService;
@@ -11,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/payments")
+@RequestMapping(value = "/pay")
 @Tag(name = "payments")
 public class PaymentController {
 
@@ -19,31 +21,17 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @PostMapping
-    public ResponseEntity<PaymentCreateDTO> createPayment(@RequestBody PaymentCreateDTO paymentDTO)
+    public ResponseEntity<PaymentDTO> createPayment(@RequestBody PaymentCreateDTO paymentDTO)
             throws RegraDeNegocioException, BancoDeDadosException {
-        PaymentCreateDTO createdPayment = paymentService.createPayment(paymentDTO);
+        PaymentDTO createdPayment = paymentService.createPayment(paymentDTO);
         return new ResponseEntity<>(createdPayment, HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<PaymentCreateDTO> findById(@PathVariable Long id) throws RegraDeNegocioException {
-        PaymentCreateDTO paymentDTO = paymentService.findById(id);
-        return new ResponseEntity<>(paymentDTO, HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<PaymentDTO> findById(@RequestParam("id") Long id) throws RegraDeNegocioException {
+        PaymentDTO payment = paymentService.findById(id);
+        return new ResponseEntity<>(payment, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<PaymentCreateDTO> updatePayment(
-            @PathVariable Long id,
-            @RequestBody PaymentCreateDTO paymentDTO
-    ) throws RegraDeNegocioException, BancoDeDadosException {
-        PaymentCreateDTO updatedPayment = paymentService.updatePayment(id, paymentDTO);
-        return new ResponseEntity<>(updatedPayment, HttpStatus.OK);
-    }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<String> deletePayment(@PathVariable Long id)
-            throws RegraDeNegocioException, BancoDeDadosException {
-        paymentService.deletePayment(id);
-        return new ResponseEntity<>("Pagamento excluído com sucesso!", HttpStatus.OK);
-    }
 }

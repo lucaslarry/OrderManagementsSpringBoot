@@ -3,6 +3,7 @@ package com.course.springboot.controllers;
 import com.course.springboot.docs.OrderControllerDoc;
 import com.course.springboot.dto.order.OrderCreateDTO;
 import com.course.springboot.dto.order.OrderDTO;
+import com.course.springboot.dto.order.OrderStatusUpdateDTO;
 import com.course.springboot.dto.order.OrderUpdateDTO;
 import com.course.springboot.exceptions.BancoDeDadosException;
 import com.course.springboot.exceptions.RegraDeNegocioException;
@@ -18,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/orders")
 @Tag(name = "orders")
-public class OrderController implements OrderControllerDoc {
+public class OrderController  {
 
     @Autowired
     private OrderService orderService;
@@ -45,6 +46,12 @@ public class OrderController implements OrderControllerDoc {
     public ResponseEntity<OrderDTO> update(@PathVariable Long id, @RequestBody OrderUpdateDTO orderUpdateDTO)
             throws BancoDeDadosException, RegraDeNegocioException {
         OrderDTO orderDTO = orderService.update(id, orderUpdateDTO);
+        return new ResponseEntity<>(orderDTO, HttpStatus.OK);
+    }
+
+    public ResponseEntity<OrderDTO> updateStatus(@PathVariable Long id, @RequestBody OrderStatusUpdateDTO orderUpdateDTO)
+            throws BancoDeDadosException, RegraDeNegocioException {
+        OrderDTO orderDTO = orderService.updateStatus(id, orderUpdateDTO);
         return new ResponseEntity<>(orderDTO, HttpStatus.OK);
     }
 
