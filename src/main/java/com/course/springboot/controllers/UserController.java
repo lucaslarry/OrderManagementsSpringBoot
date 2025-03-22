@@ -1,22 +1,23 @@
 package com.course.springboot.controllers;
 
+import com.course.springboot.docs.UserControllerDoc;
 import com.course.springboot.dto.user.UserCreateDTO;
 import com.course.springboot.dto.user.UserDTO;
 import com.course.springboot.exceptions.BancoDeDadosException;
 import com.course.springboot.exceptions.RegraDeNegocioException;
 import com.course.springboot.services.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/users")
-public class UserController {
+@Tag(name = "users")
+public class UserController implements UserControllerDoc {
 
     @Autowired
     private UserService service;

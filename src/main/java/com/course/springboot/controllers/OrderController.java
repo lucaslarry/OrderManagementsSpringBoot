@@ -1,7 +1,9 @@
 package com.course.springboot.controllers;
 
+import com.course.springboot.docs.OrderControllerDoc;
 import com.course.springboot.entities.Order;
 import com.course.springboot.services.OrderService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +15,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/orders")
-public class OrderController {
+@Tag(name = "orders")
+public class OrderController implements OrderControllerDoc {
 
     @Autowired
     private OrderService service;

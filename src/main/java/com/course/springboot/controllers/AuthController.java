@@ -1,5 +1,6 @@
 package com.course.springboot.controllers;
 
+import com.course.springboot.docs.AuthControllerDoc;
 import com.course.springboot.dto.auth.LoginDTO;
 import com.course.springboot.dto.auth.TokenDTO;
 import com.course.springboot.dto.user.UserCreateDTO;
@@ -8,6 +9,7 @@ import com.course.springboot.entities.User;
 import com.course.springboot.exceptions.RegraDeNegocioException;
 import com.course.springboot.security.TokenService;
 import com.course.springboot.services.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,8 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-public class AuthController {
+@Tag(name = "auth")
+public class AuthController implements AuthControllerDoc {
 
     public final AuthenticationManager authenticationManager;
 
@@ -57,7 +60,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> insert(@RequestBody UserCreateDTO obj) throws Exception {
+    public ResponseEntity<UserDTO> register(@RequestBody UserCreateDTO obj) throws Exception {
         UserDTO entity = userService.insertAdmin(obj);
         return new ResponseEntity<>(entity, HttpStatus.CREATED);
     }

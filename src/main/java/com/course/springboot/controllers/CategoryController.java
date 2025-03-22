@@ -1,7 +1,9 @@
 package com.course.springboot.controllers;
 
+import com.course.springboot.docs.CategoryControllerDoc;
 import com.course.springboot.entities.Category;
 import com.course.springboot.services.CategoryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +15,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/categories")
-public class CategoryController {
+@Tag(name = "categories")
+public class CategoryController implements CategoryControllerDoc {
 
     @Autowired
     private CategoryService service;

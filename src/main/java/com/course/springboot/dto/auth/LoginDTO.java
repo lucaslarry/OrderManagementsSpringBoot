@@ -12,13 +12,13 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class LoginDTO {
-    @Schema(example = "User's email")
+    @Schema(description = "User's email", example = "john.doe@example.com", format = "email")
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email")
     @NotNull
     private String login;
 
-    @Schema(example = "User's password")
+    @Schema(description = "User's password", example = "Password@123", format = "password", minLength = 8, maxLength = 20)
     @NotNull
     @NotBlank(message = "Password is required")
     private String password;
