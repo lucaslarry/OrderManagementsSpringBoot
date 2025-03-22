@@ -1,15 +1,17 @@
 package com.course.springboot.controllers;
 
 import com.course.springboot.docs.OrderControllerDoc;
-import com.course.springboot.entities.Order;
+import com.course.springboot.dto.order.OrderCreateDTO;
+import com.course.springboot.dto.order.OrderDTO;
+import com.course.springboot.dto.order.OrderUpdateDTO;
+import com.course.springboot.exceptions.BancoDeDadosException;
+import com.course.springboot.exceptions.RegraDeNegocioException;
 import com.course.springboot.services.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,17 +21,32 @@ import java.util.List;
 public class OrderController implements OrderControllerDoc {
 
     @Autowired
-    private OrderService service;
+    private OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<List<Order>> findAll(){
-        List<Order> list = service.findAll();
-        return ResponseEntity.ok().body(list);
+    public ResponseEntity<List<OrderDTO>> findAll() throws BancoDeDadosException {
+        List<OrderDTO> list = orderService.findAll();
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Order> findById(@PathVariable Long id){
-        Order obj = service.findById(id);
-        return ResponseEntity.ok(obj);
+    public ResponseEntity<OrderDTO> findById(@PathVariable Long id) throws RegraDeNegocioException {
+        OrderDTO obj = orderService.findById(id);
+        return new ResponseEntity<>(obj, HttpStatus.OK);
     }
+
+    @PostMapping
+    public ResponseEntity<OrderDTO> insert(@RequestBody OrderCreateDTO orderCreateDTO) throws RegraDeNegocioException, BancoDeDadosException {
+        OrderDTO entity = orderService.insert(orderCreateDTO);
+        return new ResponseEntity<>(entity, HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<OrderDTO> update(@PathVariable Long id, @RequestBody OrderUpdateDTO orderUpdateDTO)
+            throws BancoDeDadosException, RegraDeNegocioException {
+        OrderDTO orderDTO = orderService.update(id, orderUpdateDTO);
+        return new ResponseEntity<>(orderDTO, HttpStatus.OK);
+    }
+
+
 }

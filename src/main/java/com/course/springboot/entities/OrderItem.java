@@ -2,10 +2,7 @@ package com.course.springboot.entities;
 
 import com.course.springboot.entities.pk.OrderItemPK;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -16,6 +13,7 @@ import java.util.Objects;
 @Table(name = "tb_order_item")
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class OrderItem implements Serializable {
     @EmbeddedId
     private OrderItemPK id = new OrderItemPK();

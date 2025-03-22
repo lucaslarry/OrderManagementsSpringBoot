@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -23,5 +24,5 @@ public class OrderCreateDTO {
     @Schema(description = "List of product IDs in the order", example = "[1, 2, 3]")
     @NotNull(message = "Product IDs are required")
     @Size(min = 1, message = "At least one product is required")
-    private Set<Long> productIds;
+    private List<Long> productIds;
 }
