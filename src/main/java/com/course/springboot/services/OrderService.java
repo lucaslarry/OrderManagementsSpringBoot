@@ -84,7 +84,7 @@ public class OrderService {
         Set<OrderItem> orderItems = new HashSet<>();
 
         for (Long productId : orderCreateDTO.getProductIds()) {
-            Product product = productService.findById(productId);
+            Product product = objectMapper.convertValue(productService.findById(productId), Product.class);
 
             OrderItem existingOrderItem = orderItems.stream()
                     .filter(item -> item.getProduct().equals(product))
