@@ -1,4 +1,4 @@
-# Projeto Spring Boot com Segurança JWT
+# API Gerenciador de Pedidos com SpringBoot
 
 Este é um projeto Spring Boot que implementa uma API RESTful de gerenciamento de pedidos com autenticação e autorização baseada em JWT (JSON Web Token). O projeto utiliza Spring Security para gerenciar a segurança, Spring Data JPA para persistência de dados e Swagger para documentação da API.
 
