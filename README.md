@@ -60,6 +60,9 @@ O projeto segue uma arquitetura em camadas, com separação clara de responsabil
 - Tratamento personalizado de exceções.
 - Lança exceções específicas para erros de negócio e técnicos.
 
+8. **Docs**:
+- Documentação de APIs usando Swagger/OpenAPI.
+
 ## Relacionamentos entre Entidades
 
 O projeto possui as seguintes entidades principais e seus relacionamentos:
