@@ -107,5 +107,46 @@ O projeto possui as seguintes entidades principais e seus relacionamentos:
 
 2. **Clone o Repositório**:
    ```bash
-   git clone https://github.com/seu-usuario/seu-projeto.git
-   cd seu-projeto
+   git clone https://github.com/lucaslarry/SpringBootWebService
+   cd SpringBootWebService
+   ```
+
+3. **Configuração do Banco de Dados**:
+  - Edite o arquivo `application.properties` para configurar o banco de dados desejado.
+  - Exemplo para **PostgreSQL**:
+    ```properties
+    spring.datasource.url=jdbc:postgresql://localhost:5432/nome_do_banco
+    spring.datasource.username=seu_usuario
+    spring.datasource.password=sua_senha
+    spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+    spring.jpa.hibernate.ddl-auto=update
+    ```
+  - Exemplo para **H2 (em memória)**:
+    ```properties
+    spring.datasource.url=jdbc:h2:mem:testdb
+    spring.datasource.driverClassName=org.h2.Driver
+    spring.datasource.username=sa
+    spring.datasource.password=password
+    spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+    spring.h2.console.enabled=true
+    ```
+
+4. **Execute o Projeto**:
+  - No terminal, execute o seguinte comando:
+    ```bash
+    mvn spring-boot:run
+    ```
+
+5. **Acesse a Documentação da API**:
+  - Abra o navegador e acesse:
+    ```
+    http://localhost:8080/swagger-ui.html
+    ```
+  - A documentação interativa da API estará disponível para explorar os endpoints.
+
+6. **Banco de Dados H2 (Opcional)**:
+  - Se estiver usando o H2, você pode acessar o console do banco de dados em:
+    ```
+    http://localhost:8080/h2-console
+    ```
+  - Use as credenciais configuradas no `application.properties`.
