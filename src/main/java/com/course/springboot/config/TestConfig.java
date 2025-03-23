@@ -7,13 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
 import java.util.Arrays;
 
 @Configuration
-@Profile("test")
 public class TestConfig implements CommandLineRunner {
 
     @Autowired
@@ -59,8 +57,8 @@ public class TestConfig implements CommandLineRunner {
 
         productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
 
-        User u1 = new User(null, "Maria", "maria@gmail.com", "988888888","senha");
-        User u2 = new User(null, "Joao", "joao@gmail.com", "977777777", "ahnes");
+        User u1 = new User(null, "Maria", "maria@gmail.com", "988888888","senha!L1");
+        User u2 = new User(null, "Joao", "joao@gmail.com", "977777777", "ahnes!L1");
 
         Role r1 = new Role(null, "Admin");
         Role r2 = new Role(null, "User");

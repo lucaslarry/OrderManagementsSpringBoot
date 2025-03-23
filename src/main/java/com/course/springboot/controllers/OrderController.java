@@ -15,13 +15,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/orders")
-@Tag(name = "orders")
 @RequiredArgsConstructor
-public class OrderController  {
+public class OrderController implements OrderControllerDoc {
 
 
     private final OrderService orderService;
@@ -39,19 +39,19 @@ public class OrderController  {
     }
 
     @PostMapping
-    public ResponseEntity<OrderDTO> insert(@RequestBody OrderCreateDTO orderCreateDTO) throws RegraDeNegocioException, BancoDeDadosException {
+    public ResponseEntity<OrderDTO> insert(@RequestBody @Valid OrderCreateDTO orderCreateDTO) throws RegraDeNegocioException, BancoDeDadosException {
         OrderDTO entity = orderService.insert(orderCreateDTO);
         return new ResponseEntity<>(entity, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<OrderDTO> update(@PathVariable Long id, @RequestBody OrderUpdateDTO orderUpdateDTO)
+    public ResponseEntity<OrderDTO> update(@PathVariable Long id, @RequestBody @Valid OrderUpdateDTO orderUpdateDTO)
             throws BancoDeDadosException, RegraDeNegocioException {
         OrderDTO orderDTO = orderService.update(id, orderUpdateDTO);
         return new ResponseEntity<>(orderDTO, HttpStatus.OK);
     }
 
-    public ResponseEntity<OrderDTO> updateStatus(@PathVariable Long id, @RequestBody OrderStatusUpdateDTO orderUpdateDTO)
+    public ResponseEntity<OrderDTO> updateStatus(@PathVariable Long id, @RequestBody @Valid OrderStatusUpdateDTO orderUpdateDTO)
             throws BancoDeDadosException, RegraDeNegocioException {
         OrderDTO orderDTO = orderService.updateStatus(id, orderUpdateDTO);
         return new ResponseEntity<>(orderDTO, HttpStatus.OK);

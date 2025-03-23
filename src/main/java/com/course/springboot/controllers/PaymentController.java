@@ -1,5 +1,6 @@
 package com.course.springboot.controllers;
 
+import com.course.springboot.docs.PaymentControllerDoc;
 import com.course.springboot.dto.payment.PaymentCreateDTO;
 import com.course.springboot.dto.payment.PaymentDTO;
 
@@ -12,24 +13,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/pay")
-@Tag(name = "payments")
 @RequiredArgsConstructor
-public class PaymentController {
+public class PaymentController implements PaymentControllerDoc {
 
-
-    private PaymentService paymentService;
+    private final PaymentService paymentService;
 
     @PostMapping
-    public ResponseEntity<PaymentDTO> createPayment(@RequestBody PaymentCreateDTO paymentDTO)
+    public ResponseEntity<PaymentDTO> createPayment(@RequestBody @Valid PaymentCreateDTO paymentDTO)
             throws RegraDeNegocioException, BancoDeDadosException {
         PaymentDTO createdPayment = paymentService.createPayment(paymentDTO);
         return new ResponseEntity<>(createdPayment, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PaymentDTO> findById(@RequestParam("id") Long id) throws RegraDeNegocioException {
+    public ResponseEntity<PaymentDTO> findById(@PathVariable Long id ) throws RegraDeNegocioException {
         PaymentDTO payment = paymentService.findById(id);
         return new ResponseEntity<>(payment, HttpStatus.OK);
     }

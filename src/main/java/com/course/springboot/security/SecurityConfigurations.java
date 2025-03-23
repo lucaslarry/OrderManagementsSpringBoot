@@ -31,9 +31,36 @@ public class SecurityConfigurations {
                     .cors().and()
                     .csrf().disable()
                     .authorizeHttpRequests((authz) -> authz
-                            .antMatchers("/auth", "/").permitAll()
+
+                            //Liberado
+                            .antMatchers("/auth", "/auth/login", "/").permitAll()
+                            .antMatchers("/h2-console/**").permitAll()
                             .antMatchers(HttpMethod.POST, "/users/register").permitAll()
-                            .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
+
+                            //Apenas ADMIN
+                            .antMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
+                            .antMatchers(HttpMethod.GET, "/users/{id}").hasRole("ADMIN")
+                            .antMatchers(HttpMethod.DELETE, "/users/{id}").hasRole("ADMIN")
+                            .antMatchers(HttpMethod.POST, "/auth/register").hasRole("ADMIN")
+                            .antMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
+                            .antMatchers(HttpMethod.PUT, "/products/{id}").hasRole("ADMIN")
+                            .antMatchers(HttpMethod.DELETE, "/products/{id}").hasRole("ADMIN")
+                            .antMatchers(HttpMethod.POST, "/categories").hasRole("ADMIN")
+                            .antMatchers(HttpMethod.PUT, "/categories/{id}").hasRole("ADMIN")
+                            .antMatchers(HttpMethod.DELETE, "/categories/{id}").hasRole("ADMIN")
+                            .antMatchers(HttpMethod.PUT, "/orders/{id}").hasRole("ADMIN")
+                            .antMatchers(HttpMethod.DELETE, "/orders/{id}").hasRole("ADMIN")
+
+                            //Para USER e ADMIN
+                            .antMatchers(HttpMethod.PUT, "/users/{id}").hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.GET, "/products").hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.GET, "/categories").hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.GET, "/orders").hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.POST, "/orders").hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.POST, "/payments").hasAnyRole("ADMIN", "USER")
+                            .antMatchers(HttpMethod.GET, "/payments/{id}").hasAnyRole("ADMIN", "USER")
+
+                            // Qualquer outra requisição precisa de autenticação
                             .anyRequest().authenticated()
                     );
 

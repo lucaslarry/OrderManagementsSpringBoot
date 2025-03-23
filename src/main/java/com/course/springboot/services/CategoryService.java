@@ -8,7 +8,6 @@ import com.course.springboot.exceptions.RegraDeNegocioException;
 import com.course.springboot.repositories.CategoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -21,62 +20,54 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     private final CategoryRepository repository;
-
-
     private final ObjectMapper objectMapper;
 
     public List<CategoryDTO> findAll() throws BancoDeDadosException {
-        try {
-            return repository.findAll().stream()
-                    .map(category -> objectMapper.convertValue(category, CategoryDTO.class))
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new BancoDeDadosException("Erro ao buscar todas as categorias: " + e.getMessage());
-        }
+        return repository.findAll().stream()
+                .map(category -> objectMapper.convertValue(category, CategoryDTO.class))
+                .collect(Collectors.toList());
     }
-
 
     public CategoryDTO findById(Long id) throws RegraDeNegocioException {
+        if (id == null) {
+            throw new RegraDeNegocioException("Category ID cannot be null", HttpStatus.BAD_REQUEST);
+        }
         Optional<Category> obj = repository.findById(id);
         return obj.map(category -> objectMapper.convertValue(category, CategoryDTO.class))
-                .orElseThrow(() -> new RegraDeNegocioException("Categoria não encontrada", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new RegraDeNegocioException("Category not found", HttpStatus.NOT_FOUND));
     }
 
-    public CategoryDTO insert(CategoryCreateDTO categoryCreateDTO) throws BancoDeDadosException {
-        try {
-            Category entity = objectMapper.convertValue(categoryCreateDTO, Category.class);
-            return objectMapper.convertValue(repository.save(entity), CategoryDTO.class);
-        } catch (Exception e) {
-            throw new BancoDeDadosException("Erro ao inserir categoria: " + e.getMessage());
+    public CategoryDTO insert(CategoryCreateDTO categoryCreateDTO) throws BancoDeDadosException, RegraDeNegocioException {
+        if (categoryCreateDTO == null) {
+            throw new RegraDeNegocioException("Category DTO cannot be null", HttpStatus.BAD_REQUEST);
         }
+        Category entity = objectMapper.convertValue(categoryCreateDTO, Category.class);
+        return objectMapper.convertValue(repository.save(entity), CategoryDTO.class);
     }
 
     public CategoryDTO update(Long id, CategoryDTO categoryDTO) throws RegraDeNegocioException, BancoDeDadosException {
-        try {
-            Category entity = repository.findById(id)
-                    .orElseThrow(() -> new RegraDeNegocioException("Categoria não encontrada", HttpStatus.NOT_FOUND));
-            updateData(categoryDTO, entity);
-            return objectMapper.convertValue(repository.save(entity), CategoryDTO.class);
-        } catch (RegraDeNegocioException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new BancoDeDadosException("Erro ao atualizar categoria: " + e.getMessage());
+        if (id == null) {
+            throw new RegraDeNegocioException("Category ID cannot be null", HttpStatus.BAD_REQUEST);
         }
+        Category entity = repository.findById(id)
+                .orElseThrow(() -> new RegraDeNegocioException("Category not found", HttpStatus.NOT_FOUND));
+        updateData(categoryDTO, entity);
+        return objectMapper.convertValue(repository.save(entity), CategoryDTO.class);
     }
 
-    public void delete(Long id) throws RegraDeNegocioException, BancoDeDadosException {
-        try {
-            Category entity = repository.findById(id)
-                    .orElseThrow(() -> new RegraDeNegocioException("Categoria não encontrada", HttpStatus.NOT_FOUND));
-            repository.delete(entity);
-        } catch (RegraDeNegocioException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new BancoDeDadosException("Erro ao excluir categoria: " + e.getMessage());
+    public void delete(Long id) throws RegraDeNegocioException {
+        if (id == null) {
+            throw new RegraDeNegocioException("Category ID cannot be null", HttpStatus.BAD_REQUEST);
         }
+        Category entity = repository.findById(id)
+                .orElseThrow(() -> new RegraDeNegocioException("Category not found", HttpStatus.NOT_FOUND));
+        repository.delete(entity);
     }
 
-    private void updateData(CategoryDTO categoryDTO, Category entity) {
+    private void updateData(CategoryDTO categoryDTO, Category entity) throws RegraDeNegocioException {
+        if (categoryDTO.getName() == null || categoryDTO.getName().trim().isEmpty()) {
+            throw new RegraDeNegocioException("Category name cannot be null or empty", HttpStatus.BAD_REQUEST);
+        }
         entity.setName(categoryDTO.getName());
     }
 }

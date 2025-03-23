@@ -1,97 +1,111 @@
-# Projeto Spring Boot: API de Gerenciamento Pedidos
+# Projeto Spring Boot com Segurança JWT
 
-Este projeto é uma API desenvolvida em Spring Boot 2.7.1 para gerenciar usuários, produtos, categorias e pedidos. A API utiliza autenticação JWT para garantir a segurança das operações e está documentada com Swagger para facilitar o uso e a integração.
+Este é um projeto Spring Boot que implementa uma API RESTful de gerenciamento de pedidos com autenticação e autorização baseada em JWT (JSON Web Token). O projeto utiliza Spring Security para gerenciar a segurança, Spring Data JPA para persistência de dados e Swagger para documentação da API.
 
----
+## Tecnologias Utilizadas
 
-## Entidades Principais
+- **Spring Boot**: Framework para desenvolvimento de aplicações Java.
+- **Spring Security**: Gerenciamento de autenticação e autorização.
+- **JWT (JSON Web Token)**: Autenticação stateless via tokens.
+- **Spring Data JPA**: Persistência de dados com JPA e Hibernate.
+- **Spring Validation**: Validação de dados de entrada.
+- **Spring Boot Test**: Testes unitários e de integração.
+- **Swagger (OpenAPI)**: Documentação interativa da API.
+- **Banco de Dados**: Configurado para uso com PostGres com JPA.
 
-### 1. **User**
-Representa um usuário do sistema. Implementa a interface `UserDetails` do Spring Security para integração com autenticação JWT. Um usuário pode ter vários cargos (`roles`) e fazer vários pedidos (`orders`).
+## Funcionalidades Principais
 
+- **Login com geração de token JWT**
+- **Proteção de endpoints com base em roles (ADMIN e USER)**
+- **Gestão de Usuários**
+- **Gestão de Produtos**
+- **Gestão de Categorias**
+- **Gestão de Pedidos**
+- **Gestão de Pagamentos**
+- **Documentação interativa com Swagger (OpenAPI)**
+
+## Arquitetura do Projeto
+
+O projeto segue uma arquitetura em camadas, com separação clara de responsabilidades. A estrutura é organizada da seguinte forma:
+
+### Camadas Principais
+
+1. **Controller (API Layer)**:
+- Responsável por receber as requisições HTTP e enviar as respostas.
+- Expõe os endpoints da API.
+- Valida os dados de entrada (DTOs) e repassa as requisições para a camada de serviço.
+
+2. **Service (Business Layer)**:
+- Contém a lógica de negócio do sistema.
+- Realiza operações como validações, regras de negócio e interações com o banco de dados.
+- Utiliza os repositórios para acessar os dados.
+
+3. **Repository (Data Access Layer)**:
+- Responsável pela comunicação com o banco de dados.
+- Utiliza Spring Data JPA para realizar operações CRUD nas entidades.
+
+4. **Entity (Domain Layer)**:
+- Representa as tabelas do banco de dados.
+- Define os relacionamentos entre as entidades e os atributos de cada uma.
+
+5. **DTO (Data Transfer Object)**:
+- Objetos usados para transferir dados entre as camadas.
+- Evita expor diretamente as entidades do banco de dados.
+
+6. **Security**:
+- Configurações de autenticação e autorização.
+- Utiliza JWT para gerenciar tokens de acesso.
+
+7. **Exceptions**:
+- Tratamento personalizado de exceções.
+- Lança exceções específicas para erros de negócio e técnicos.
+
+## Relacionamentos entre Entidades
+
+O projeto possui as seguintes entidades principais e seus relacionamentos:
+
+### 1. **User (Usuário)**
 - **Relacionamentos**:
-    - `@ManyToMany` com `Role`: Um usuário pode ter vários cargos, e um cargo pode pertencer a vários usuários.
-    - `@OneToMany` com `Order`: Um usuário pode fazer vários pedidos.
+  - Um usuário pode ter **múltiplos pedidos** (`Order`).
+  - Um usuário pode ter **múltiplos pagamentos** (`Payment`).
 
----
-
-### 2. **Role**
-Representa um cargo (role) que um usuário pode ter no sistema, como ADMIN ou USER.
-
+### 2. **Role (Papel)**
 - **Relacionamentos**:
-    - `@ManyToMany` com `User`: Um cargo pode ser atribuído a vários usuários.
+  - Um papel pode estar associado a **múltiplos usuários**.
 
----
-
-### 3. **Categoria**
-Representa uma categoria de produtos, como "Eletrônicos" ou "Roupas".
-
+### 3. **Product (Produto)**
 - **Relacionamentos**:
-    - `@OneToMany` com `Produto`: Uma categoria pode ter vários produtos.
+  - Um produto pode estar em **múltiplos pedidos** (`OrderItem`).
 
----
-
-### 4. **Produto**
-Representa um produto disponível para venda, como um smartphone ou uma camiseta.
-
+### 4. **Category (Categoria)**
 - **Relacionamentos**:
-    - `@ManyToOne` com `Categoria`: Um produto pertence a uma categoria.
-    - `@ManyToMany` com `Order`: Um produto pode estar em vários pedidos.
+  - Uma categoria pode estar associada a **múltiplos produtos**.
 
----
-
-### 5. **Order**
-Representa um pedido feito por um usuário, contendo uma lista de produtos.
-
+### 5. **Order (Pedido)**
 - **Relacionamentos**:
-    - `@ManyToOne` com `User`: Um pedido é feito por um usuário.
-    - `@ManyToMany` com `Produto`: Um pedido pode conter vários produtos.
+  - Um pedido pertence a **um usuário** (`User`).
+  - Um pedido pode ter **múltiplos itens** (`OrderItem`).
 
----
+### 6. **OrderItem (Item do Pedido)**
+- **Relacionamentos**:
+  - Um item do pedido está associado a **um pedido** (`Order`).
+  - Um item do pedido está associado a **um produto** (`Product`).
 
-## DTOs (Data Transfer Objects)
+### 7. **Payment (Pagamento)**
+- **Relacionamentos**:
+  - Um pagamento está associado a **um pedido** (`Order`).
+  - Um pagamento pertence a **um usuário** (`User`).
 
-Os DTOs são utilizados para transferir dados entre as camadas da aplicação, garantindo que apenas as informações necessárias sejam expostas.
+## Endpoints
+  ![img.png](imgs/img.png)![img_1.png](imgs/img_1.png)![img_2.png](imgs/img_2.png)
+## Como Executar o Projeto
 
-### 1. **User**
-- **UserCreateDTO**: Usado para criar um novo usuário.
-- **UserDTO**: Usado para retornar informações sobre um usuário.
+1. **Pré-requisitos**:
+  - Java 17 ou superior.
+  - Maven instalado.
+  - Banco de dados configurado (ou H2 em memória).
 
-### 2. **Categoria**
-- **CategoriaCreateDTO**: Usado para criar uma nova categoria.
-- **CategoriaDTO**: Usado para retornar informações sobre uma categoria.
-
-### 3. **Produto**
-- **ProdutoCreateDTO**: Usado para criar um novo produto.
-- **ProdutoDTO**: Usado para retornar informações sobre um produto.
-
-### 4. **Order**
-- **OrderCreateDTO**: Usado para criar um novo pedido.
-- **OrderDTO**: Usado para retornar informações sobre um pedido.
-
----
-
-## Endpoints da API
-
-A API está organizada nos seguintes endpoints:
-
-### Autenticação
-- **POST /auth/login**: Realiza o login e retorna um token JWT.
-
-### Usuários
-- **POST /users**: Cria um novo usuário.
-- **GET /users/{id}**: Retorna informações sobre um usuário específico.
-
-### Categorias
-- **POST /categories**: Cria uma nova categoria.
-- **GET /categories/{id}**: Retorna informações sobre uma categoria específica.
-
-### Produtos
-- **POST /products**: Cria um novo produto.
-- **GET /products/{id}**: Retorna informações sobre um produto específico.
-
-### Pedidos
-- **POST /orders**: Cria um novo pedido.
-- **GET /orders/{id}**: Retorna informações sobre um pedido específico.
-
----
+2. **Clone o Repositório**:
+   ```bash
+   git clone https://github.com/seu-usuario/seu-projeto.git
+   cd seu-projeto

@@ -6,6 +6,7 @@ import com.course.springboot.dto.auth.TokenDTO;
 import com.course.springboot.dto.user.UserCreateDTO;
 import com.course.springboot.dto.user.UserDTO;
 import com.course.springboot.entities.User;
+import com.course.springboot.exceptions.BancoDeDadosException;
 import com.course.springboot.exceptions.RegraDeNegocioException;
 import com.course.springboot.security.TokenService;
 import com.course.springboot.services.UserService;
@@ -27,7 +28,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Tag(name = "auth")
 public class AuthController implements AuthControllerDoc {
 
     public final AuthenticationManager authenticationManager;
@@ -60,7 +60,7 @@ public class AuthController implements AuthControllerDoc {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> register(@RequestBody UserCreateDTO obj) throws Exception {
+    public ResponseEntity<UserDTO> register(@RequestBody @Valid UserCreateDTO obj) throws BancoDeDadosException, RegraDeNegocioException {
         UserDTO entity = userService.insertAdmin(obj);
         return new ResponseEntity<>(entity, HttpStatus.CREATED);
     }

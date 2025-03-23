@@ -31,45 +31,47 @@ public class OrderService {
     private final ObjectMapper objectMapper;
 
     public List<OrderDTO> findAll() throws BancoDeDadosException {
-        try {
-            return orderRepository.findAll().stream()
-                    .map(order -> objectMapper.convertValue(order, OrderDTO.class))
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new BancoDeDadosException("Erro ao buscar todos os pedidos: " + e.getMessage());
-        }
+        return orderRepository.findAll().stream()
+                .map(order -> objectMapper.convertValue(order, OrderDTO.class))
+                .collect(Collectors.toList());
     }
 
     public OrderDTO findById(Long id) throws RegraDeNegocioException {
+        if (id == null) {
+            throw new RegraDeNegocioException("Order ID cannot be null", HttpStatus.BAD_REQUEST);
+        }
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RegraDeNegocioException("Pedido não encontrado", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new RegraDeNegocioException("Order not found", HttpStatus.NOT_FOUND));
         return objectMapper.convertValue(order, OrderDTO.class);
     }
 
     public OrderDTO insert(OrderCreateDTO orderCreateDTO) throws RegraDeNegocioException, BancoDeDadosException {
-        try {
-            Order order = new Order();
-            order.setMoment(Instant.now());
-            order.setOrderStatus(OrderStatus.WAITING_PAYMENT);
-
-            UserDTO clientDTO = userService.findById(orderCreateDTO.getClientId());
-            User client = objectMapper.convertValue(clientDTO, User.class);
-            order.setClient(client);
-
-            orderRepository.save(order);
-
-            Set<OrderItem> orderItems = createOrderItems(order, orderCreateDTO);
-
-            orderItemRepository.saveAll(orderItems);
-            order.setItems(orderItems);
-            orderRepository.save(order);
-
-            return objectMapper.convertValue(order, OrderDTO.class);
-        } catch (RegraDeNegocioException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new BancoDeDadosException("Erro ao inserir pedido: " + e.getMessage());
+        if (orderCreateDTO == null) {
+            throw new RegraDeNegocioException("Order DTO cannot be null", HttpStatus.BAD_REQUEST);
         }
+        if (orderCreateDTO.getClientId() == null) {
+            throw new RegraDeNegocioException("Client ID cannot be null", HttpStatus.BAD_REQUEST);
+        }
+        if (orderCreateDTO.getProductIds() == null || orderCreateDTO.getProductIds().isEmpty()) {
+            throw new RegraDeNegocioException("Product list cannot be null or empty", HttpStatus.BAD_REQUEST);
+        }
+
+        Order order = new Order();
+        order.setMoment(Instant.now());
+        order.setOrderStatus(OrderStatus.WAITING_PAYMENT);
+
+        UserDTO clientDTO = userService.findById(orderCreateDTO.getClientId());
+        User client = objectMapper.convertValue(clientDTO, User.class);
+        order.setClient(client);
+
+        orderRepository.save(order);
+
+        Set<OrderItem> orderItems = createOrderItems(order, orderCreateDTO);
+        orderItemRepository.saveAll(orderItems);
+        order.setItems(orderItems);
+        orderRepository.save(order);
+
+        return objectMapper.convertValue(order, OrderDTO.class);
     }
 
     private Set<OrderItem> createOrderItems(Order order, OrderCreateDTO orderCreateDTO) throws RegraDeNegocioException {
@@ -93,35 +95,35 @@ public class OrderService {
     }
 
     public OrderDTO updateStatus(Long id, OrderStatusUpdateDTO orderDTO) throws RegraDeNegocioException, BancoDeDadosException {
-        try {
-            Order entity = orderRepository.findById(id)
-                    .orElseThrow(() -> new RegraDeNegocioException("Pedido não encontrado", HttpStatus.NOT_FOUND));
-            updateStatusData(orderDTO, entity);
-            return objectMapper.convertValue(orderRepository.save(entity), OrderDTO.class);
-        } catch (RegraDeNegocioException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new BancoDeDadosException("Erro ao atualizar pedido: " + e.getMessage());
+        if (id == null) {
+            throw new RegraDeNegocioException("Order ID cannot be null", HttpStatus.BAD_REQUEST);
         }
+        if (orderDTO == null) {
+            throw new RegraDeNegocioException("Status update DTO cannot be null", HttpStatus.BAD_REQUEST);
+        }
+
+        Order entity = orderRepository.findById(id)
+                .orElseThrow(() -> new RegraDeNegocioException("Order not found", HttpStatus.NOT_FOUND));
+        updateStatusData(orderDTO, entity);
+        return objectMapper.convertValue(orderRepository.save(entity), OrderDTO.class);
     }
-
-
 
     private void updateStatusData(OrderStatusUpdateDTO orderDTO, Order entity) {
         entity.setOrderStatus(orderDTO.getOrderStatus());
     }
 
     public OrderDTO update(Long id, OrderUpdateDTO orderDTO) throws RegraDeNegocioException, BancoDeDadosException {
-        try {
-            Order entity = orderRepository.findById(id)
-                    .orElseThrow(() -> new RegraDeNegocioException("Pedido não encontrado", HttpStatus.NOT_FOUND));
-            updateData(orderDTO, entity);
-            return objectMapper.convertValue(orderRepository.save(entity), OrderDTO.class);
-        } catch (RegraDeNegocioException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new BancoDeDadosException("Erro ao atualizar pedido: " + e.getMessage());
+        if (id == null) {
+            throw new RegraDeNegocioException("Order ID cannot be null", HttpStatus.BAD_REQUEST);
         }
+        if (orderDTO == null) {
+            throw new RegraDeNegocioException("Order update DTO cannot be null", HttpStatus.BAD_REQUEST);
+        }
+
+        Order entity = orderRepository.findById(id)
+                .orElseThrow(() -> new RegraDeNegocioException("Order not found", HttpStatus.NOT_FOUND));
+        updateData(orderDTO, entity);
+        return objectMapper.convertValue(orderRepository.save(entity), OrderDTO.class);
     }
 
     private void updateData(OrderUpdateDTO orderDTO, Order entity) throws RegraDeNegocioException {
@@ -135,7 +137,10 @@ public class OrderService {
     }
 
     public Order findEntityById(Long id) throws RegraDeNegocioException {
+        if (id == null) {
+            throw new RegraDeNegocioException("Order ID cannot be null", HttpStatus.BAD_REQUEST);
+        }
         return orderRepository.findById(id)
-                .orElseThrow(() -> new RegraDeNegocioException("Pedido não encontrado", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new RegraDeNegocioException("Order not found", HttpStatus.NOT_FOUND));
     }
 }

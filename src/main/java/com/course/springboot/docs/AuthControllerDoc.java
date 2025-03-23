@@ -30,13 +30,16 @@ public interface AuthControllerDoc {
     @PostMapping()
     ResponseEntity<TokenDTO> login(@RequestBody @Valid LoginDTO loginDTO) throws BancoDeDadosException, RegraDeNegocioException;
 
-    @Operation(summary = "Register a new Admin", description = "Creates a new user with admin permissions")
+    @Operation(
+            summary = "Create a new admin user",
+            description = "Creates a new admin user with the provided data and roles."
+    )
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "User registered successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid user data"),
+            @ApiResponse(responseCode = "201", description = "Admin user created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
             @ApiResponse(responseCode = "403", description = "You do not have permission to access this resource"),
-            @ApiResponse(responseCode = "500", description = "An exception was thrown")
+            @ApiResponse(responseCode = "500", description = "An internal server error occurred")
     })
     @PostMapping("/register")
-    ResponseEntity<UserDTO> register(@RequestBody @Valid UserCreateDTO userCreateDTO) throws Exception;
+    ResponseEntity<UserDTO> register(@RequestBody UserCreateDTO userCreateDTO) throws RegraDeNegocioException, BancoDeDadosException;
 }

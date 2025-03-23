@@ -1,5 +1,6 @@
 package com.course.springboot.controllers;
 
+import com.course.springboot.docs.ProductControllerDoc;
 import com.course.springboot.dto.product.ProductCreateDTO;
 import com.course.springboot.dto.product.ProductDTO;
 import com.course.springboot.dto.product.ProductUpdateDTO;
@@ -8,18 +9,17 @@ import com.course.springboot.exceptions.RegraDeNegocioException;
 import com.course.springboot.services.ProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-@Tag(name = "Produtos", description = "Operações relacionadas a produtos")
 @RequiredArgsConstructor
-public class ProductController {
+public class ProductController implements ProductControllerDoc {
 
     private final ProductService productService;
 
@@ -44,7 +44,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDTO> insert(@RequestBody ProductCreateDTO productCreateDTO) {
+    public ResponseEntity<ProductDTO> insert(@RequestBody @Valid ProductCreateDTO productCreateDTO) {
         try {
             ProductDTO product = productService.insert(productCreateDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(product);
@@ -56,7 +56,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductUpdateDTO productUpdateDTO) {
+    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody @Valid ProductUpdateDTO productUpdateDTO) {
         try {
             ProductDTO product = productService.update(id, productUpdateDTO);
             return ResponseEntity.ok(product);
@@ -68,7 +68,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<String> delete(@PathVariable Long id) {
         try {
             productService.delete(id);
             return ResponseEntity.noContent().build();
