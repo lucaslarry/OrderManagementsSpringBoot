@@ -9,6 +9,7 @@ import com.course.springboot.exceptions.RegraDeNegocioException;
 import com.course.springboot.repositories.RoleRepository;
 import com.course.springboot.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,13 +28,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
-    @Autowired
+
     private UserRepository repository;
-    @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
     private RoleRepository roleRepository;
 
 

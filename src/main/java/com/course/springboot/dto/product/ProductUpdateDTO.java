@@ -10,6 +10,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,6 +32,6 @@ public class ProductUpdateDTO {
     @Schema(description = "Product image URL", example = "https://example.com/image.jpg")
     private String imageUrl;
 
-    @Schema(description = "Category ID", example = "1")
-    private Long categoryId;
+    @Schema(description = "Category ID", example = "[1]")
+    private List<Long> categoriesID;
 }

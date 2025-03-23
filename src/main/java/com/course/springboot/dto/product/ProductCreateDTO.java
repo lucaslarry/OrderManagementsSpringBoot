@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,7 +33,7 @@ public class ProductCreateDTO {
     @Schema(description = "Product image URL", example = "https://example.com/image.jpg")
     private String imageUrl;
 
-    @Schema(description = "Category ID", example = "1")
+    @Schema(description = "Category ID", example = "[1]")
     @NotNull(message = "Category ID is required")
-    private Long categoryId;
+    private List<Long> categoriesID;
 }

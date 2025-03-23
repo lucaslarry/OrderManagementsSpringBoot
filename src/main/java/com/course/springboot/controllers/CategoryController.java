@@ -8,6 +8,7 @@ import com.course.springboot.exceptions.BancoDeDadosException;
 import com.course.springboot.exceptions.RegraDeNegocioException;
 import com.course.springboot.services.CategoryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,10 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/categories")
 @Tag(name = "categories")
+@RequiredArgsConstructor
 public class CategoryController implements CategoryControllerDoc {
 
-    @Autowired
-    private CategoryService service;
+    private final CategoryService service;
     
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> findAll() throws BancoDeDadosException {

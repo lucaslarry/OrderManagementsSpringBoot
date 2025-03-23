@@ -12,10 +12,4 @@ import java.util.Optional;
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItem, OrderItemPK> {
 
-    default Optional<OrderItem> findByOrderAndProduct(Order order, Product product) {
-        OrderItemPK id = new OrderItemPK();
-        id.setOrder(order);
-        id.setProduct(product);
-        return this.findById(id);
-    }
 }

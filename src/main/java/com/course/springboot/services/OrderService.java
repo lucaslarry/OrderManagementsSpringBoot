@@ -12,7 +12,7 @@ import com.course.springboot.exceptions.RegraDeNegocioException;
 import com.course.springboot.repositories.OrderRepository;
 import com.course.springboot.repositories.OrderItemRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -21,22 +21,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class OrderService {
 
-    @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
-    private OrderItemRepository orderItemRepository;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ProductService productService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final UserService userService;
+    private final ProductService productService;
+    private final ObjectMapper objectMapper;
 
     public List<OrderDTO> findAll() throws BancoDeDadosException {
         try {

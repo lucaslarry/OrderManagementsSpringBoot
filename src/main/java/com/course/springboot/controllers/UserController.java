@@ -7,6 +7,7 @@ import com.course.springboot.exceptions.BancoDeDadosException;
 import com.course.springboot.exceptions.RegraDeNegocioException;
 import com.course.springboot.services.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,10 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/users")
 @Tag(name = "users")
+@RequiredArgsConstructor
 public class UserController implements UserControllerDoc {
 
-    @Autowired
-    private UserService service;
+    private final UserService service;
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> findAll() throws BancoDeDadosException {

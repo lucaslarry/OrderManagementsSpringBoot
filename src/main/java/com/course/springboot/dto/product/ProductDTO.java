@@ -1,6 +1,7 @@
 package com.course.springboot.dto.product;
 
 import com.course.springboot.dto.category.CategoryDTO;
+import com.course.springboot.entities.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,5 +33,5 @@ public class ProductDTO {
     private String imageUrl;
 
     @Schema(description = "Product category")
-    private CategoryDTO category;
+    private Set<Category> categories;
 }
